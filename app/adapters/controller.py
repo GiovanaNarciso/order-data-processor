@@ -62,9 +62,13 @@ def get_orders(
         )
 
         if not orders_data:
+            if order_id is not None:
+                raise HTTPException(status_code=404, detail=f"Order with ID {order_id} not found")
             return Response(status_code=204)
 
         return JSONResponse(content=orders_data)
+    except HTTPException:
+        raise
     except SQLAlchemyError as e:
         logger.exception(
             "Database error occurred during GET /orders. Exception: %s",

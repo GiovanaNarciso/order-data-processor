@@ -73,8 +73,14 @@ def test_post_orders_empty_file_returns_204():
     assert resp.status_code == 204
 
 
-def test_get_orders_no_data_returns_204():
+def test_get_orders_no_data_returns_404_for_specific_order():
     resp = client.get("/api/orders?order_id=999999")
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "Order with ID 999999 not found"
+
+
+def test_get_orders_no_data_returns_204_for_general_query():
+    resp = client.get("/api/orders?start_date=2099-01-01")
     assert resp.status_code == 204
 
 
